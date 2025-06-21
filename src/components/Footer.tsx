@@ -15,15 +15,15 @@ const Footer: React.FC = () => {
               that combine style, functionality, and affordability.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-primary-400 transition-colors">
+              <button className="text-gray-400 hover:text-primary-400 transition-colors">
                 <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary-400 transition-colors">
+              </button>
+              <button className="text-gray-400 hover:text-primary-400 transition-colors">
                 <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary-400 transition-colors">
+              </button>
+              <button className="text-gray-400 hover:text-primary-400 transition-colors">
                 <Instagram className="h-5 w-5" />
-              </a>
+              </button>
             </div>
           </div>
 
@@ -81,15 +81,15 @@ const Footer: React.FC = () => {
               © 2024 Designer Me. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="text-gray-400 hover:text-primary-400 text-sm transition-colors">
+              <button className="text-gray-400 hover:text-primary-400 text-sm transition-colors">
                 Privacy Policy
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary-400 text-sm transition-colors">
+              </button>
+              <button className="text-gray-400 hover:text-primary-400 text-sm transition-colors">
                 Terms of Service
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary-400 text-sm transition-colors">
+              </button>
+              <button className="text-gray-400 hover:text-primary-400 text-sm transition-colors">
                 Shipping Policy
-              </a>
+              </button>
             </div>
           </div>
         </div>

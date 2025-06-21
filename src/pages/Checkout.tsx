@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowLeft, CreditCard, Truck, Check } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const Checkout: React.FC = () => {
-  const navigate = useNavigate();
   const { state, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
