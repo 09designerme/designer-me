@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { ShoppingCart, Filter, SortAsc, Grid, List } from 'lucide-react';
 import { Product } from '../context/CartContext';
 import { useCart } from '../context/CartContext';
+import { useSearch } from '../context/SearchContext';
 
 // Sample products data
 const allProducts: Product[] = [
@@ -79,10 +80,27 @@ const Products: React.FC = () => {
   const [sortBy, setSortBy] = useState("name");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const { addItem } = useCart();
+  const { searchQuery, setSearchQuery, clearSearch } = useSearch();
+  const [searchParams] = useSearchParams();
 
-  const filteredProducts = allProducts.filter(product => 
-    selectedCategory === "All" || product.category === selectedCategory
-  );
+  // Handle search from URL parameters
+  useEffect(() => {
+    const searchFromUrl = searchParams.get('search');
+    if (searchFromUrl) {
+      setSearchQuery(decodeURIComponent(searchFromUrl));
+    }
+  }, [searchParams, setSearchQuery]);
+
+  // Filter products by category and search query
+  const filteredProducts = allProducts.filter(product => {
+    const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
+    const matchesSearch = !searchQuery || 
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return matchesCategory && matchesSearch;
+  });
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
@@ -162,6 +180,17 @@ const Products: React.FC = () => {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">All Products</h1>
         <p className="text-gray-600">Discover our collection of premium design products</p>
+        {searchQuery && (
+          <div className="mt-4 flex items-center space-x-2">
+            <span className="text-sm text-gray-600">Search results for: "{searchQuery}"</span>
+            <button
+              onClick={clearSearch}
+              className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+            >
+              Clear search
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Filters and Controls */}
@@ -225,6 +254,7 @@ const Products: React.FC = () => {
       <div className="mb-6">
         <p className="text-gray-600">
           Showing {sortedProducts.length} of {allProducts.length} products
+          {searchQuery && ` matching "${searchQuery}"`}
         </p>
       </div>
 
@@ -247,9 +277,17 @@ const Products: React.FC = () => {
       {sortedProducts.length === 0 && (
         <div className="text-center py-12">
           <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
-          <p className="text-gray-600 mb-4">Try adjusting your filters or search terms</p>
+          <p className="text-gray-600 mb-4">
+            {searchQuery 
+              ? `No products match "${searchQuery}". Try adjusting your search terms or filters.`
+              : "Try adjusting your filters or search terms"
+            }
+          </p>
           <button
-            onClick={() => setSelectedCategory("All")}
+            onClick={() => {
+              setSelectedCategory("All");
+              clearSearch();
+            }}
             className="btn-primary"
           >
             View All Products
