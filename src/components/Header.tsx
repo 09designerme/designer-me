@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Search, Menu, X } from 'lucide-react';
+import { ShoppingCart, Search, Menu, X, Settings } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useSearch } from '../context/SearchContext';
+import { useAdmin } from '../context/AdminContext';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { state } = useCart();
   const { searchQuery, setSearchQuery } = useSearch();
+  const { isAuthenticated, admin } = useAdmin();
   const navigate = useNavigate();
 
   const cartItemCount = state.items.reduce((total, item) => total + item.quantity, 0);
@@ -46,6 +48,12 @@ const Header: React.FC = () => {
             <Link to="/contact" className="text-gray-700 hover:text-primary-600 transition-colors">
               Contact
             </Link>
+            {isAuthenticated && (
+              <Link to="/admin/dashboard" className="text-gray-700 hover:text-primary-600 transition-colors flex items-center space-x-1">
+                <Settings className="h-4 w-4" />
+                <span>Admin</span>
+              </Link>
+            )}
           </nav>
 
           {/* Search Bar */}
@@ -62,15 +70,23 @@ const Header: React.FC = () => {
             </form>
           </div>
 
-          {/* Cart Icon */}
-          <Link to="/cart" className="relative p-2 text-gray-700 hover:text-primary-600 transition-colors">
-            <ShoppingCart className="h-6 w-6" />
-            {cartItemCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {cartItemCount}
-              </span>
+          {/* Cart Icon and Admin */}
+          <div className="flex items-center space-x-4">
+            <Link to="/cart" className="relative p-2 text-gray-700 hover:text-primary-600 transition-colors">
+              <ShoppingCart className="h-6 w-6" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
+            
+            {!isAuthenticated && (
+              <Link to="/admin/login" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
+                Admin Login
+              </Link>
             )}
-          </Link>
+          </div>
 
           {/* Mobile menu button */}
           <button
@@ -117,6 +133,24 @@ const Header: React.FC = () => {
               >
                 Contact
               </Link>
+              {isAuthenticated ? (
+                <Link
+                  to="/admin/dashboard"
+                  className="block px-3 py-2 text-gray-700 hover:text-primary-600 transition-colors flex items-center space-x-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Settings className="h-4 w-4" />
+                  <span>Admin Dashboard</span>
+                </Link>
+              ) : (
+                <Link
+                  to="/admin/login"
+                  className="block px-3 py-2 text-gray-700 hover:text-primary-600 transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Admin Login
+                </Link>
+              )}
             </div>
             {/* Mobile Search */}
             <div className="px-4 pb-3">

@@ -4,74 +4,7 @@ import { ShoppingCart, Filter, SortAsc, Grid, List } from 'lucide-react';
 import { Product } from '../context/CartContext';
 import { useCart } from '../context/CartContext';
 import { useSearch } from '../context/SearchContext';
-
-// Sample products data
-const allProducts: Product[] = [
-  {
-    id: 1,
-    name: "Modern Desk Lamp",
-    price: 89.99,
-    image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=400&fit=crop",
-    description: "Elegant desk lamp with adjustable brightness",
-    category: "Lighting"
-  },
-  {
-    id: 2,
-    name: "Ergonomic Office Chair",
-    price: 299.99,
-    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop",
-    description: "Comfortable office chair with lumbar support",
-    category: "Furniture"
-  },
-  {
-    id: 3,
-    name: "Wireless Bluetooth Speaker",
-    price: 149.99,
-    image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop",
-    description: "Portable speaker with crystal clear sound",
-    category: "Electronics"
-  },
-  {
-    id: 4,
-    name: "Designer Coffee Mug",
-    price: 24.99,
-    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
-    description: "Ceramic mug with unique geometric design",
-    category: "Kitchen"
-  },
-  {
-    id: 5,
-    name: "Wall Art Canvas",
-    price: 79.99,
-    image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=400&fit=crop",
-    description: "Abstract wall art to enhance your space",
-    category: "Decor"
-  },
-  {
-    id: 6,
-    name: "Smart Home Hub",
-    price: 199.99,
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
-    description: "Control your home with voice commands",
-    category: "Electronics"
-  },
-  {
-    id: 7,
-    name: "Plant Stand",
-    price: 45.99,
-    image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400&h=400&fit=crop",
-    description: "Modern plant stand for indoor greenery",
-    category: "Decor"
-  },
-  {
-    id: 8,
-    name: "Kitchen Mixer",
-    price: 129.99,
-    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop",
-    description: "Professional kitchen mixer for baking",
-    category: "Kitchen"
-  }
-];
+import { useProducts } from '../context/ProductContext';
 
 const categories = ["All", "Lighting", "Furniture", "Electronics", "Kitchen", "Decor"];
 
@@ -81,6 +14,7 @@ const Products: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const { addItem } = useCart();
   const { searchQuery, setSearchQuery, clearSearch } = useSearch();
+  const { products } = useProducts();
   const [searchParams] = useSearchParams();
 
   // Handle search from URL parameters
@@ -92,7 +26,7 @@ const Products: React.FC = () => {
   }, [searchParams, setSearchQuery]);
 
   // Filter products by category and search query
-  const filteredProducts = allProducts.filter(product => {
+  const filteredProducts = products.filter(product => {
     const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
     const matchesSearch = !searchQuery || 
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -253,7 +187,7 @@ const Products: React.FC = () => {
       {/* Results Count */}
       <div className="mb-6">
         <p className="text-gray-600">
-          Showing {sortedProducts.length} of {allProducts.length} products
+          Showing {sortedProducts.length} of {products.length} products
           {searchQuery && ` matching "${searchQuery}"`}
         </p>
       </div>
